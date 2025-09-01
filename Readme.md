@@ -87,7 +87,7 @@ Contributions welcome! See issues for TODOs.
 - **libgit2**: This project uses libgit2 (vendored as a submodule at commit 58d9363), licensed under GPLv2 with a Linking Exception. This allows linking from any program, but modifications to libgit2 itself require source distribution. Full terms: [COPYING](https://github.com/libgit2/libgit2/blob/main/COPYING).
 - **odin-c-bindgen**: Bindings generated using odin-c-bindgen by Karl Zylinski, inspired by floooh's Sokol bindgen. No specific license mentioned; check the repo for details.
 
-odit itself is licensed under [your license, e.g., MIT—add LICENSE file]. Respect upstream licenses in your usage.
+odit itself is licensed under MIT as seen at [LICENSE](LICENSE). Respect upstream licenses in your usage.
 
 ## Contributing
 
