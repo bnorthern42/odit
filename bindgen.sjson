@@ -1,0 +1,35 @@
+// Inputs can be folders or files. It will look for header (.h) files inside
+// any folder. The bindings will be based on those headers. Also, any .lib,
+// .odin, .dll etc will be copied to the output folder.
+inputs = [
+	"./libs/include",
+	"./libs/include/git2"
+]
+
+// Files to ignore when processing files in the inputs folders
+ignore_inputs = [
+	// "file.h"
+]
+
+// Output folder: One .odin file per processed header
+output_folder = "odit"
+
+// Remove this prefix from types names (structs, enums, etc)
+remove_type_prefix = ""
+
+// Remove this prefix from macro names
+remove_macro_prefix = ""
+
+// Remove this prefix from function names (and add it as link_prefix) to the foreign group
+remove_function_prefix = ""
+
+// Only include things that has this prefix
+required_prefix = ""
+
+// Set to true translate type names to Ada_Case
+force_ada_case_types = false
+
+// Single lib file to import
+//import_lib = "my_lib.lib"
+
+
