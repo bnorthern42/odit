@@ -64,7 +64,7 @@ main :: proc() {
 
 Build your project:
 ```
-odin build . -extra-linker-flags:"-L./libs/libgit2/build -l:git2.a -lz"
+odin build . -extra-linker-flags:"-L./libs/build -l:git2.a -lz"
 ```
 (Adjust linker flags for your setup; use `-lgit2` for dynamic linking if preferred.)
 

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="5b0059b2-498f-4df1-8cfd-57ac62c0d4d8" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bindgen/examples/box2d/box2d/base.odin" beforeDir="false" afterPath="$PROJECT_DIR$/bindgen/examples/box2d/box2d/base.odin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bindgen/examples/box2d/box2d/box2d.odin" beforeDir="false" afterPath="$PROJECT_DIR$/bindgen/examples/box2d/box2d/box2d.odin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bindgen/examples/box2d/box2d/collision.odin" beforeDir="false" afterPath="$PROJECT_DIR$/bindgen/examples/box2d/box2d/collision.odin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bindgen/examples/box2d/box2d/id.odin" beforeDir="false" afterPath="$PROJECT_DIR$/bindgen/examples/box2d/box2d/id.odin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bindgen/examples/box2d/box2d/math_functions.odin" beforeDir="false" afterPath="$PROJECT_DIR$/bindgen/examples/box2d/box2d/math_functions.odin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bindgen/examples/box2d/box2d/types.odin" beforeDir="false" afterPath="$PROJECT_DIR$/bindgen/examples/box2d/box2d/types.odin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bindgen/examples/pdfio/pdfio/pdfio-content.odin" beforeDir="false" afterPath="$PROJECT_DIR$/bindgen/examples/pdfio/pdfio/pdfio-content.odin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bindgen/examples/pdfio/pdfio/pdfio.odin" beforeDir="false" afterPath="$PROJECT_DIR$/bindgen/examples/pdfio/pdfio/pdfio.odin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bindgen/examples/raylib/raylib/raylib.odin" beforeDir="false" afterPath="$PROJECT_DIR$/bindgen/examples/raylib/raylib/raylib.odin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bindgen/examples/ufbx/ufbx/ufbx.odin" beforeDir="false" afterPath="$PROJECT_DIR$/bindgen/examples/ufbx/ufbx/ufbx.odin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bindgen/libclang/BuildSystem.odin" beforeDir="false" afterPath="$PROJECT_DIR$/bindgen/libclang/BuildSystem.odin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bindgen/libclang/CXCompilationDatabase.odin" beforeDir="false" afterPath="$PROJECT_DIR$/bindgen/libclang/CXCompilationDatabase.odin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bindgen/libclang/CXDiagnostic.odin" beforeDir="false" afterPath="$PROJECT_DIR$/bindgen/libclang/CXDiagnostic.odin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bindgen/libclang/CXErrorCode.odin" beforeDir="false" afterPath="$PROJECT_DIR$/bindgen/libclang/CXErrorCode.odin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bindgen/libclang/CXFile.odin" beforeDir="false" afterPath="$PROJECT_DIR$/bindgen/libclang/CXFile.odin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bindgen/libclang/CXSourceLocation.odin" beforeDir="false" afterPath="$PROJECT_DIR$/bindgen/libclang/CXSourceLocation.odin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bindgen/libclang/CXString.odin" beforeDir="false" afterPath="$PROJECT_DIR$/bindgen/libclang/CXString.odin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bindgen/libclang/Documentation.odin" beforeDir="false" afterPath="$PROJECT_DIR$/bindgen/libclang/Documentation.odin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bindgen/libclang/Index.odin" beforeDir="false" afterPath="$PROJECT_DIR$/bindgen/libclang/Index.odin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bindgen/libclang/Rewrite.odin" beforeDir="false" afterPath="$PROJECT_DIR$/bindgen/libclang/Rewrite.odin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bindgen/src/bindgen.odin" beforeDir="false" afterPath="$PROJECT_DIR$/bindgen/src/bindgen.odin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bindgen/test/test/test.odin" beforeDir="false" afterPath="$PROJECT_DIR$/bindgen/test/test/test.odin" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="327QiTFfDxknxwzFfA4JsuNZqym" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/bradn44/Projects/tutorials/languages/odit",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.23892.409" />
+        <option value="bundled-js-predefined-d6986cc7102b-e03c56caf84a-JavaScript-IU-252.23892.409" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5b0059b2-498f-4df1-8cfd-57ac62c0d4d8" name="Changes" comment="" />
+      <created>1756769258039</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1756769258039</updated>
+      <workItem from="1756769259192" duration="2148000" />
+      <workItem from="1756771605245" duration="15240000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
