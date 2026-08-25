@@ -1,1 +1,11 @@
 bindgen/
+.idea/
+libs/build/
+*.bin
+*.out
+sandbox_test
+sandbox_demo
+odit_demo
+TestingSandbox/sandbox_demo
+TestingDev/TestingDev.bin
+TestingDev/test_odit.bin
