@@ -167,3 +167,69 @@ git_writestream :: struct {
 	free:  proc "c" (^git_writestream),
 }
 
+// Opaque libgit2 types
+git_repository               :: struct {}
+git_commit                   :: struct {}
+git_tree                     :: struct {}
+git_tree_entry               :: struct {}
+git_treebuilder              :: struct {}
+git_blob                     :: struct {}
+git_tag                      :: struct {}
+git_object                   :: struct {}
+git_index                    :: struct {}
+git_index_iterator           :: struct {}
+git_index_conflict_iterator  :: struct {}
+git_reference                :: struct {}
+git_reference_iterator       :: struct {}
+git_transaction              :: struct {}
+git_annotated_commit         :: struct {}
+git_status_list              :: struct {}
+git_rebase                   :: struct {}
+git_revwalk                  :: struct {}
+git_worktree                 :: struct {}
+git_remote                   :: struct {}
+git_transport                :: struct {}
+git_push                     :: struct {}
+git_submodule                :: struct {}
+git_mailmap                  :: struct {}
+git_reflog_entry             :: struct {}
+git_reflog                   :: struct {}
+git_note                     :: struct {}
+git_packbuilder              :: struct {}
+git_config                   :: struct {}
+git_config_backend           :: struct {}
+git_odb                      :: struct {}
+git_odb_backend              :: struct {}
+git_odb_object               :: struct {}
+git_midx_writer              :: struct {}
+git_refdb                    :: struct {}
+git_refdb_backend            :: struct {}
+git_commit_graph             :: struct {}
+git_commit_graph_writer      :: struct {}
+git_filter_list              :: struct {}
+git_diff                     :: struct {}
+git_patch                    :: struct {}
+git_blame                    :: struct {}
+git_indexer                  :: struct {}
+git_pathspec                 :: struct {}
+git_refspec                  :: struct {}
+git_credential               :: struct {}
+
+// External types referenced by libgit2
+LIBSSH2_SESSION              :: struct {}
+LIBSSH2_USERAUTH_KBDINT_PROMPT :: struct {}
+LIBSSH2_USERAUTH_KBDINT_RESPONSE :: struct {}
+
+
+git_credential_userpass_plaintext :: struct {}
+git_credential_username           :: struct {}
+git_credential_ssh_key            :: struct {}
+git_credential_ssh_interactive    :: struct {}
+git_credential_ssh_custom         :: struct {}
+
+git_branch_iterator      :: struct {}
+git_config_iterator      :: struct {}
+git_describe_result      :: struct {}
+git_diff_stats           :: struct {}
+git_oid_shorten          :: struct {}
+git_pathspec_match_list  :: struct {}

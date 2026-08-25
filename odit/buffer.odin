@@ -10,6 +10,37 @@ import "core:c"
 
 _ :: c
 
+when ODIN_OS == .Windows {
+	foreign import lib {
+		"git2.lib",
+		"system:ws2_32",
+		"system:crypt32",
+		"system:rpcrt4",
+		"system:ole32",
+		"system:advapi32",
+		"system:shell32",
+		"system:user32",
+	}
+} else when ODIN_OS == .Darwin {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:iconv",
+		"system:Security",
+		"system:CoreFoundation",
+		"system:pthread",
+	}
+} else {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:ssl",
+		"system:crypto",
+		"system:pthread",
+	}
+}
+
+
 
 
 // INCLUDE_git_buf_h__ :: 
@@ -26,13 +57,17 @@ _ :: c
 * A `git_buf` contains a pointer to a NUL-terminated C string, and
 * the length of the string (not including the NUL terminator).
 */
-git_buf :: struct {}
+git_buf :: struct {
+	ptr:      cstring,
+	reserved: c.size_t,
+	size:     c.size_t,
+}
 
 /**
  * Use to initialize a `git_buf` before passing it to a function that
  * will populate it.
  */
-GIT_BUF_INIT :: {NULL, 0, 0}
+GIT_BUF_INIT :: git_buf{nil, 0, 0}
 
 @(default_calling_convention="c", link_prefix="")
 foreign lib {
