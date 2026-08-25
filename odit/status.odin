@@ -10,6 +10,37 @@ import "core:c"
 
 _ :: c
 
+when ODIN_OS == .Windows {
+	foreign import lib {
+		"git2.lib",
+		"system:ws2_32",
+		"system:crypt32",
+		"system:rpcrt4",
+		"system:ole32",
+		"system:advapi32",
+		"system:shell32",
+		"system:user32",
+	}
+} else when ODIN_OS == .Darwin {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:iconv",
+		"system:Security",
+		"system:CoreFoundation",
+		"system:pthread",
+	}
+} else {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:ssl",
+		"system:crypto",
+		"system:pthread",
+	}
+}
+
+
 
 
 // INCLUDE_git_status_h__ :: 
@@ -196,7 +227,7 @@ git_status_opt_t :: enum c.uint {
 }
 
 /** Default `git_status_opt_t` values */
-GIT_STATUS_OPT_DEFAULTS :: (GIT_STATUS_OPT_INCLUDE_IGNORED|GIT_STATUS_OPT_INCLUDE_UNTRACKED|GIT_STATUS_OPT_RECURSE_UNTRACKED_DIRS)
+GIT_STATUS_OPT_DEFAULTS :: (u32(git_status_opt_t.INCLUDE_IGNORED)|u32(git_status_opt_t.INCLUDE_UNTRACKED)|u32(git_status_opt_t.RECURSE_UNTRACKED_DIRS))
 
 /**
 * Options to control how `git_status_foreach_ext()` will issue callbacks.
@@ -205,13 +236,20 @@ GIT_STATUS_OPT_DEFAULTS :: (GIT_STATUS_OPT_INCLUDE_IGNORED|GIT_STATUS_OPT_INCLUD
 * use `git_status_options_init`.
 *
 */
-git_status_options :: struct {}
+git_status_options :: struct {
+	version:          c.uint,
+	show:             git_status_show_t,
+	flags:            c.uint,
+	pathspec:         git_strarray,
+	baseline:         ^git_tree,
+	rename_threshold: u16,
+}
 
 /** Current version for the `git_status_options` structure */
 GIT_STATUS_OPTIONS_VERSION :: 1
 
 /** Static constructor for `git_status_options` */
-GIT_STATUS_OPTIONS_INIT :: {GIT_STATUS_OPTIONS_VERSION}
+GIT_STATUS_OPTIONS_INIT :: git_status_options{version = GIT_STATUS_OPTIONS_VERSION}
 
 /**
 * A status entry, providing the differences between the file as it exists

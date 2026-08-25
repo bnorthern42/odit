@@ -10,6 +10,37 @@ import "core:c"
 
 _ :: c
 
+when ODIN_OS == .Windows {
+	foreign import lib {
+		"git2.lib",
+		"system:ws2_32",
+		"system:crypt32",
+		"system:rpcrt4",
+		"system:ole32",
+		"system:advapi32",
+		"system:shell32",
+		"system:user32",
+	}
+} else when ODIN_OS == .Darwin {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:iconv",
+		"system:Security",
+		"system:CoreFoundation",
+		"system:pthread",
+	}
+} else {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:ssl",
+		"system:crypto",
+		"system:pthread",
+	}
+}
+
+
 
 
 // INCLUDE_git_stash_h__ :: 
@@ -74,7 +105,7 @@ git_stash_save_options :: struct {
 GIT_STASH_SAVE_OPTIONS_VERSION :: 1
 
 /** Static constructor for `git_stash_save_options` */
-GIT_STASH_SAVE_OPTIONS_INIT :: {GIT_STASH_SAVE_OPTIONS_VERSION}
+GIT_STASH_SAVE_OPTIONS_INIT :: git_stash_save_options{version = GIT_STASH_SAVE_OPTIONS_VERSION}
 
 /** Stash application flags. */
 git_stash_apply_flags :: enum c.uint {
@@ -148,7 +179,7 @@ git_stash_apply_options :: struct {
 GIT_STASH_APPLY_OPTIONS_VERSION :: 1
 
 /** Static constructor for `git_stash_apply_options` */
-GIT_STASH_APPLY_OPTIONS_INIT :: {GIT_STASH_APPLY_OPTIONS_VERSION, GIT_STASH_APPLY_DEFAULT, GIT_CHECKOUT_OPTIONS_INIT}
+GIT_STASH_APPLY_OPTIONS_INIT :: git_stash_apply_options{version = GIT_STASH_APPLY_OPTIONS_VERSION, checkout_options = {version = GIT_CHECKOUT_OPTIONS_VERSION, dir_mode = 0o755, file_mode = 0o644}}
 
 /**
 * This is a callback function you can provide to iterate over all the

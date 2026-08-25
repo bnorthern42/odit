@@ -10,6 +10,37 @@ import "core:c"
 
 _ :: c
 
+when ODIN_OS == .Windows {
+	foreign import lib {
+		"git2.lib",
+		"system:ws2_32",
+		"system:crypt32",
+		"system:rpcrt4",
+		"system:ole32",
+		"system:advapi32",
+		"system:shell32",
+		"system:user32",
+	}
+} else when ODIN_OS == .Darwin {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:iconv",
+		"system:Security",
+		"system:CoreFoundation",
+		"system:pthread",
+	}
+} else {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:ssl",
+		"system:crypto",
+		"system:pthread",
+	}
+}
+
+
 
 
 // INCLUDE_git_merge_h__ :: 
@@ -19,13 +50,19 @@ _ :: c
 * `git_merge_file_input` structure with descriptions of the files in
 * each side of the conflict for use in producing the merge file.
 */
-git_merge_file_input :: struct {}
+git_merge_file_input :: struct {
+	version: c.uint,
+	ptr:     cstring,
+	size:    c.size_t,
+	path:    cstring,
+	mode:    c.uint,
+}
 
 /** Current version for the `git_merge_file_input_options` structure */
 GIT_MERGE_FILE_INPUT_VERSION :: 1
 
 /** Static constructor for `git_merge_file_input_options` */
-GIT_MERGE_FILE_INPUT_INIT :: {GIT_MERGE_FILE_INPUT_VERSION}
+GIT_MERGE_FILE_INPUT_INIT :: git_merge_file_input{version = GIT_MERGE_FILE_INPUT_VERSION}
 
 /**
 * Flags for `git_merge` options.  A combination of these flags can be
@@ -188,12 +225,18 @@ git_merge_file_options :: struct {
 GIT_MERGE_FILE_OPTIONS_VERSION :: 1
 
 /** Static constructor for `git_merge_file_options` */
-GIT_MERGE_FILE_OPTIONS_INIT :: {GIT_MERGE_FILE_OPTIONS_VERSION}
+GIT_MERGE_FILE_OPTIONS_INIT :: git_merge_file_options{version = GIT_MERGE_FILE_OPTIONS_VERSION}
 
 /**
 * Information about file-level merging
 */
-git_merge_file_result :: struct {}
+git_merge_file_result :: struct {
+	automergeable: c.uint,
+	path:          cstring,
+	mode:          c.uint,
+	ptr:           cstring,
+	len:           c.size_t,
+}
 
 /**
 * Merging options
@@ -253,7 +296,7 @@ git_merge_options :: struct {
 GIT_MERGE_OPTIONS_VERSION :: 1
 
 /** Static constructor for `git_merge_options` */
-GIT_MERGE_OPTIONS_INIT :: {GIT_MERGE_OPTIONS_VERSION, GIT_MERGE_FIND_RENAMES}
+GIT_MERGE_OPTIONS_INIT :: git_merge_options{version = GIT_MERGE_OPTIONS_VERSION, flags = u32(git_merge_flag_t.FIND_RENAMES)}
 
 /**
 * The results of `git_merge_analysis` indicate the merge opportunities.

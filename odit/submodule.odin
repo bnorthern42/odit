@@ -10,6 +10,37 @@ import "core:c"
 
 _ :: c
 
+when ODIN_OS == .Windows {
+	foreign import lib {
+		"git2.lib",
+		"system:ws2_32",
+		"system:crypt32",
+		"system:rpcrt4",
+		"system:ole32",
+		"system:advapi32",
+		"system:shell32",
+		"system:user32",
+	}
+} else when ODIN_OS == .Darwin {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:iconv",
+		"system:Security",
+		"system:CoreFoundation",
+		"system:pthread",
+	}
+} else {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:ssl",
+		"system:crypto",
+		"system:pthread",
+	}
+}
+
+
 
 
 // INCLUDE_git_submodule_h__ :: 
@@ -128,7 +159,7 @@ git_submodule_update_options :: struct {
 GIT_SUBMODULE_UPDATE_OPTIONS_VERSION :: 1
 
 /** Static constructor for `git_submodule_update_options` */
-GIT_SUBMODULE_UPDATE_OPTIONS_INIT :: {GIT_SUBMODULE_UPDATE_OPTIONS_VERSION, GIT_CHECKOUT_OPTIONS_INIT, GIT_FETCH_OPTIONS_INIT, 1}
+GIT_SUBMODULE_UPDATE_OPTIONS_INIT :: git_submodule_update_options{version = GIT_SUBMODULE_UPDATE_OPTIONS_VERSION, checkout_opts = {version = GIT_CHECKOUT_OPTIONS_VERSION, dir_mode = 0o755, file_mode = 0o644}, fetch_opts = {version = GIT_FETCH_OPTIONS_VERSION, callbacks = {version = GIT_REMOTE_CALLBACKS_VERSION}, prune = .PRUNE_UNSPECIFIED, proxy_opts = {version = GIT_PROXY_OPTIONS_VERSION}}, allow_fetch = 1}
 
 @(default_calling_convention="c", link_prefix="")
 foreign lib {

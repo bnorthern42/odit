@@ -10,6 +10,37 @@ import "core:c"
 
 _ :: c
 
+when ODIN_OS == .Windows {
+	foreign import lib {
+		"git2.lib",
+		"system:ws2_32",
+		"system:crypt32",
+		"system:rpcrt4",
+		"system:ole32",
+		"system:advapi32",
+		"system:shell32",
+		"system:user32",
+	}
+} else when ODIN_OS == .Darwin {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:iconv",
+		"system:Security",
+		"system:CoreFoundation",
+		"system:pthread",
+	}
+} else {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:ssl",
+		"system:crypto",
+		"system:pthread",
+	}
+}
+
+
 
 
 // INCLUDE_git_odb_backend_h__ :: 
@@ -32,7 +63,7 @@ GIT_ODB_BACKEND_PACK_OPTIONS_VERSION :: 1
  * Stack initializer for odb pack backend options.  Alternatively use
  * `git_odb_backend_pack_options_init` programmatic initialization.
  */
-GIT_ODB_BACKEND_PACK_OPTIONS_INIT :: {GIT_ODB_BACKEND_PACK_OPTIONS_VERSION}
+GIT_ODB_BACKEND_PACK_OPTIONS_INIT :: git_odb_backend_pack_options{version = GIT_ODB_BACKEND_PACK_OPTIONS_VERSION}
 
 git_odb_backend_loose_flag_t :: enum c.uint {
 	GIT_ODB_BACKEND_LOOSE_FSYNC = 1,
@@ -74,7 +105,7 @@ GIT_ODB_BACKEND_LOOSE_OPTIONS_VERSION :: 1
  * Stack initializer for odb loose backend options.  Alternatively use
  * `git_odb_backend_loose_options_init` programmatic initialization.
  */
-GIT_ODB_BACKEND_LOOSE_OPTIONS_INIT :: {GIT_ODB_BACKEND_LOOSE_OPTIONS_VERSION, 0, -1}
+GIT_ODB_BACKEND_LOOSE_OPTIONS_INIT :: git_odb_backend_loose_options{version = GIT_ODB_BACKEND_LOOSE_OPTIONS_VERSION, compression_level = -1}
 
 /** Streaming mode */
 git_odb_stream_t :: enum c.uint {

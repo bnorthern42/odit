@@ -112,10 +112,23 @@ git_cert_ssh_raw_type_t :: enum c.uint {
 /**
 * Hostkey information taken from libssh2
 */
-git_cert_hostkey :: struct {}
+git_cert_hostkey :: struct {
+	parent:      git_cert,
+	type:        git_cert_ssh_t,
+	hash_md5:    [16]c.uchar,
+	hash_sha1:   [20]c.uchar,
+	hash_sha256: [32]c.uchar,
+	raw_type:    git_cert_ssh_raw_type_t,
+	hostkey:     cstring,
+	hostkey_len: c.size_t,
+}
 
 /**
 * X.509 certificate information
 */
-git_cert_x509 :: struct {}
+git_cert_x509 :: struct {
+	parent: git_cert,
+	data:   rawptr,
+	len:    c.size_t,
+}
 

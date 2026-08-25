@@ -10,6 +10,37 @@ import "core:c"
 
 _ :: c
 
+when ODIN_OS == .Windows {
+	foreign import lib {
+		"git2.lib",
+		"system:ws2_32",
+		"system:crypt32",
+		"system:rpcrt4",
+		"system:ole32",
+		"system:advapi32",
+		"system:shell32",
+		"system:user32",
+	}
+} else when ODIN_OS == .Darwin {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:iconv",
+		"system:Security",
+		"system:CoreFoundation",
+		"system:pthread",
+	}
+} else {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:ssl",
+		"system:crypto",
+		"system:pthread",
+	}
+}
+
+
 
 
 // INCLUDE_git_worktree_h__ :: 
@@ -37,7 +68,7 @@ git_worktree_add_options :: struct {
 GIT_WORKTREE_ADD_OPTIONS_VERSION :: 1
 
 /** Static constructor for `git_worktree_add_options` */
-GIT_WORKTREE_ADD_OPTIONS_INIT :: {GIT_WORKTREE_ADD_OPTIONS_VERSION, 0, 0, NULL, GIT_CHECKOUT_OPTIONS_INIT}
+GIT_WORKTREE_ADD_OPTIONS_INIT :: git_worktree_add_options{version = GIT_WORKTREE_ADD_OPTIONS_VERSION, checkout_options = {version = GIT_CHECKOUT_OPTIONS_VERSION, dir_mode = 0o755, file_mode = 0o644}}
 
 /**
 * Flags which can be passed to git_worktree_prune to alter its
@@ -72,7 +103,7 @@ git_worktree_prune_options :: struct {
 GIT_WORKTREE_PRUNE_OPTIONS_VERSION :: 1
 
 /** Static constructor for `git_worktree_prune_options` */
-GIT_WORKTREE_PRUNE_OPTIONS_INIT :: {GIT_WORKTREE_PRUNE_OPTIONS_VERSION, 0}
+GIT_WORKTREE_PRUNE_OPTIONS_INIT :: git_worktree_prune_options{version = GIT_WORKTREE_PRUNE_OPTIONS_VERSION}
 
 @(default_calling_convention="c", link_prefix="")
 foreign lib {

@@ -10,6 +10,37 @@ import "core:c"
 
 _ :: c
 
+when ODIN_OS == .Windows {
+	foreign import lib {
+		"git2.lib",
+		"system:ws2_32",
+		"system:crypt32",
+		"system:rpcrt4",
+		"system:ole32",
+		"system:advapi32",
+		"system:shell32",
+		"system:user32",
+	}
+} else when ODIN_OS == .Darwin {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:iconv",
+		"system:Security",
+		"system:CoreFoundation",
+		"system:pthread",
+	}
+} else {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:ssl",
+		"system:crypto",
+		"system:pthread",
+	}
+}
+
+
 
 
 // INCLUDE_git_describe_h__ :: 
@@ -65,8 +96,7 @@ GIT_DESCRIBE_DEFAULT_ABBREVIATED_SIZE :: 7
 GIT_DESCRIBE_OPTIONS_VERSION :: 1
 
 /** Static constructor for `git_describe_options` */
-GIT_DESCRIBE_OPTIONS_INIT :: {GIT_DESCRIBE_OPTIONS_VERSION, GIT_DESCRIBE_DEFAULT_MAX_CANDIDATES_TAGS, \
-}
+GIT_DESCRIBE_OPTIONS_INIT :: git_describe_options{version = GIT_DESCRIBE_OPTIONS_VERSION, max_candidates_tags = GIT_DESCRIBE_DEFAULT_MAX_CANDIDATES_TAGS}
 
 /**
 * Describe format options structure
@@ -101,7 +131,7 @@ git_describe_format_options :: struct {
 GIT_DESCRIBE_FORMAT_OPTIONS_VERSION :: 1
 
 /** Static constructor for `git_describe_format_options` */
-GIT_DESCRIBE_FORMAT_OPTIONS_INIT :: {GIT_DESCRIBE_FORMAT_OPTIONS_VERSION, GIT_DESCRIBE_DEFAULT_ABBREVIATED_SIZE, }
+GIT_DESCRIBE_FORMAT_OPTIONS_INIT :: git_describe_format_options{version = GIT_DESCRIBE_FORMAT_OPTIONS_VERSION, abbreviated_size = GIT_DESCRIBE_DEFAULT_ABBREVIATED_SIZE}
 
 @(default_calling_convention="c", link_prefix="")
 foreign lib {

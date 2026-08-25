@@ -10,13 +10,44 @@ import "core:c"
 
 _ :: c
 
+when ODIN_OS == .Windows {
+	foreign import lib {
+		"git2.lib",
+		"system:ws2_32",
+		"system:crypt32",
+		"system:rpcrt4",
+		"system:ole32",
+		"system:advapi32",
+		"system:shell32",
+		"system:user32",
+	}
+} else when ODIN_OS == .Darwin {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:iconv",
+		"system:Security",
+		"system:CoreFoundation",
+		"system:pthread",
+	}
+} else {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:ssl",
+		"system:crypto",
+		"system:pthread",
+	}
+}
+
+
 
 
 // INCLUDE_git_oid_h__ :: 
 
 /** The type of object id. */
 git_oid_t :: enum c.uint {
-	GIT_OID_SHA1 = 1, /**< SHA1 */
+	SHA1 = 1, /**< SHA1 */
 }
 
 /*
@@ -24,7 +55,7 @@ git_oid_t :: enum c.uint {
  */
 
 /** SHA1 is currently libgit2's default oid type. */
-GIT_OID_DEFAULT         :: GIT_OID_SHA1
+GIT_OID_DEFAULT         :: git_oid_t.SHA1
 
 /** Size (in bytes) of a raw/binary sha1 oid */
 GIT_OID_SHA1_SIZE       :: 20
@@ -32,7 +63,7 @@ GIT_OID_SHA1_SIZE       :: 20
 /** Size (in bytes) of a hex formatted sha1 oid */
 GIT_OID_SHA1_HEXSIZE   :: (GIT_OID_SHA1_SIZE*2)
 
-GIT_OID_SHA1_ZERO   :: {{0}}
+GIT_OID_SHA1_ZERO   :: git_oid{}
 
 /**
  * The string representation of the null sha1 object ID.

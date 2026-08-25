@@ -10,6 +10,37 @@ import "core:c"
 
 _ :: c
 
+when ODIN_OS == .Windows {
+	foreign import lib {
+		"git2.lib",
+		"system:ws2_32",
+		"system:crypt32",
+		"system:rpcrt4",
+		"system:ole32",
+		"system:advapi32",
+		"system:shell32",
+		"system:user32",
+	}
+} else when ODIN_OS == .Darwin {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:iconv",
+		"system:Security",
+		"system:CoreFoundation",
+		"system:pthread",
+	}
+} else {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:ssl",
+		"system:crypto",
+		"system:pthread",
+	}
+}
+
+
 
 
 // INCLUDE_git_revert_h__ :: 
@@ -17,13 +48,18 @@ _ :: c
 /**
 * Options for revert
 */
-git_revert_options :: struct {}
+git_revert_options :: struct {
+	version:       c.uint,
+	mainline:      c.uint,
+	merge_opts:    git_merge_options,
+	checkout_opts: git_checkout_options,
+}
 
 /** Current version for the `git_revert_options` structure */
 GIT_REVERT_OPTIONS_VERSION :: 1
 
 /** Static constructor for `git_revert_options` */
-GIT_REVERT_OPTIONS_INIT :: {GIT_REVERT_OPTIONS_VERSION, 0, GIT_MERGE_OPTIONS_INIT, GIT_CHECKOUT_OPTIONS_INIT}
+GIT_REVERT_OPTIONS_INIT :: git_revert_options{version = GIT_REVERT_OPTIONS_VERSION, merge_opts = {version = GIT_MERGE_OPTIONS_VERSION, flags = u32(git_merge_flag_t.FIND_RENAMES)}, checkout_opts = {version = GIT_CHECKOUT_OPTIONS_VERSION, dir_mode = 0o755, file_mode = 0o644}}
 
 @(default_calling_convention="c", link_prefix="")
 foreign lib {

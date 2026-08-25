@@ -10,6 +10,37 @@ import "core:c"
 
 _ :: c
 
+when ODIN_OS == .Windows {
+	foreign import lib {
+		"git2.lib",
+		"system:ws2_32",
+		"system:crypt32",
+		"system:rpcrt4",
+		"system:ole32",
+		"system:advapi32",
+		"system:shell32",
+		"system:user32",
+	}
+} else when ODIN_OS == .Darwin {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:iconv",
+		"system:Security",
+		"system:CoreFoundation",
+		"system:pthread",
+	}
+} else {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:ssl",
+		"system:crypto",
+		"system:pthread",
+	}
+}
+
+
 
 
 // INCLUDE_git_blob_h__ :: 
@@ -85,7 +116,7 @@ GIT_BLOB_FILTER_OPTIONS_VERSION :: 1
 /**
  * The default values for `git_blob_filter_options`.
  */
-GIT_BLOB_FILTER_OPTIONS_INIT :: {GIT_BLOB_FILTER_OPTIONS_VERSION, GIT_BLOB_FILTER_CHECK_FOR_BINARY}
+GIT_BLOB_FILTER_OPTIONS_INIT :: git_blob_filter_options{version = GIT_BLOB_FILTER_OPTIONS_VERSION, flags = u32(git_blob_filter_flag_t.CHECK_FOR_BINARY)}
 
 @(default_calling_convention="c", link_prefix="")
 foreign lib {

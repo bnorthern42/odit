@@ -10,6 +10,37 @@ import "core:c"
 
 _ :: c
 
+when ODIN_OS == .Windows {
+	foreign import lib {
+		"git2.lib",
+		"system:ws2_32",
+		"system:crypt32",
+		"system:rpcrt4",
+		"system:ole32",
+		"system:advapi32",
+		"system:shell32",
+		"system:user32",
+	}
+} else when ODIN_OS == .Darwin {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:iconv",
+		"system:Security",
+		"system:CoreFoundation",
+		"system:pthread",
+	}
+} else {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:ssl",
+		"system:crypto",
+		"system:pthread",
+	}
+}
+
+
 
 
 // INCLUDE_git_repository_h__ :: 
@@ -202,7 +233,7 @@ git_repository_init_options :: struct {
 GIT_REPOSITORY_INIT_OPTIONS_VERSION :: 1
 
 /** Static constructor for `git_repository_init_options` */
-GIT_REPOSITORY_INIT_OPTIONS_INIT :: {GIT_REPOSITORY_INIT_OPTIONS_VERSION}
+GIT_REPOSITORY_INIT_OPTIONS_INIT :: git_repository_init_options{version = GIT_REPOSITORY_INIT_OPTIONS_VERSION}
 
 /**
 * List of items which belong to the git repository layout

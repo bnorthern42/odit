@@ -10,6 +10,37 @@ import "core:c"
 
 _ :: c
 
+when ODIN_OS == .Windows {
+	foreign import lib {
+		"git2.lib",
+		"system:ws2_32",
+		"system:crypt32",
+		"system:rpcrt4",
+		"system:ole32",
+		"system:advapi32",
+		"system:shell32",
+		"system:user32",
+	}
+} else when ODIN_OS == .Darwin {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:iconv",
+		"system:Security",
+		"system:CoreFoundation",
+		"system:pthread",
+	}
+} else {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:ssl",
+		"system:crypto",
+		"system:pthread",
+	}
+}
+
+
 
 
 // INCLUDE_git_remote_h__ :: 
@@ -93,7 +124,7 @@ git_remote_create_options :: struct {
 GIT_REMOTE_CREATE_OPTIONS_VERSION :: 1
 
 /** Static constructor for `git_remote_create_options` */
-GIT_REMOTE_CREATE_OPTIONS_INIT :: {GIT_REMOTE_CREATE_OPTIONS_VERSION}
+GIT_REMOTE_CREATE_OPTIONS_INIT :: git_remote_create_options{version = GIT_REMOTE_CREATE_OPTIONS_VERSION}
 
 /**
 * Argument to the completion callback which tells it which operation
@@ -316,7 +347,7 @@ git_remote_callbacks :: struct {
 GIT_REMOTE_CALLBACKS_VERSION :: 1
 
 /** Static constructor for `git_remote_callbacks_options` */
-GIT_REMOTE_CALLBACKS_INIT :: {GIT_REMOTE_CALLBACKS_VERSION}
+GIT_REMOTE_CALLBACKS_INIT :: git_remote_callbacks{version = GIT_REMOTE_CALLBACKS_VERSION}
 
 /** Acceptable prune settings when fetching */
 git_fetch_prune_t :: enum c.uint {
@@ -381,24 +412,42 @@ git_fetch_depth_t :: enum c.uint {
 *
 *		git_fetch_options opts = GIT_FETCH_OPTIONS_INIT;
 */
-git_fetch_options :: struct {}
+git_fetch_options :: struct {
+	version:           c.int,
+	callbacks:         git_remote_callbacks,
+	prune:             git_fetch_prune_t,
+	update_fetchhead:  c.uint,
+	download_tags:     git_remote_autotag_option_t,
+	proxy_opts:        git_proxy_options,
+	depth:             c.int,
+	follow_redirects:  git_remote_redirect_t,
+	custom_headers:    git_strarray,
+}
 
 /** Current version for the `git_fetch_options` structure */
 GIT_FETCH_OPTIONS_VERSION :: 1
 
 /** Static constructor for `git_fetch_options` */
-GIT_FETCH_OPTIONS_INIT :: {GIT_FETCH_OPTIONS_VERSION, GIT_REMOTE_CALLBACKS_INIT, GIT_FETCH_PRUNE_UNSPECIFIED, GIT_REMOTE_UPDATE_FETCHHEAD, GIT_REMOTE_DOWNLOAD_TAGS_UNSPECIFIED, GIT_PROXY_OPTIONS_INIT}
+GIT_FETCH_OPTIONS_INIT :: git_fetch_options{version = GIT_FETCH_OPTIONS_VERSION, callbacks = {version = GIT_REMOTE_CALLBACKS_VERSION}, prune = .PRUNE_UNSPECIFIED, proxy_opts = {version = GIT_PROXY_OPTIONS_VERSION}}
 
 /**
 * Controls the behavior of a git_push object.
 */
-git_push_options :: struct {}
+git_push_options :: struct {
+	version:             c.uint,
+	pb_parallelism:      c.uint,
+	callbacks:           git_remote_callbacks,
+	proxy_opts:          git_proxy_options,
+	follow_redirects:    git_remote_redirect_t,
+	custom_headers:      git_strarray,
+	remote_push_options: git_strarray,
+}
 
 /** Current version for the `git_push_options` structure */
 GIT_PUSH_OPTIONS_VERSION :: 1
 
 /** Static constructor for `git_push_options` */
-GIT_PUSH_OPTIONS_INIT :: {GIT_PUSH_OPTIONS_VERSION, 1, GIT_REMOTE_CALLBACKS_INIT, GIT_PROXY_OPTIONS_INIT}
+GIT_PUSH_OPTIONS_INIT :: git_push_options{version = GIT_PUSH_OPTIONS_VERSION, pb_parallelism = 1, callbacks = {version = GIT_REMOTE_CALLBACKS_VERSION}, proxy_opts = {version = GIT_PROXY_OPTIONS_VERSION}}
 
 /**
 * Remote creation options structure
@@ -407,13 +456,19 @@ GIT_PUSH_OPTIONS_INIT :: {GIT_PUSH_OPTIONS_VERSION, 1, GIT_REMOTE_CALLBACKS_INIT
 * use `git_remote_create_options_init`.
 *
 */
-git_remote_connect_options :: struct {}
+git_remote_connect_options :: struct {
+	version:          c.uint,
+	callbacks:        git_remote_callbacks,
+	proxy_opts:       git_proxy_options,
+	follow_redirects: git_remote_redirect_t,
+	custom_headers:   git_strarray,
+}
 
 /** Current version for the `git_remote_connect_options` structure */
 GIT_REMOTE_CONNECT_OPTIONS_VERSION :: 1
 
 /** Static constructor for `git_remote_connect_options` */
-GIT_REMOTE_CONNECT_OPTIONS_INIT :: {GIT_REMOTE_CONNECT_OPTIONS_VERSION, GIT_REMOTE_CALLBACKS_INIT, GIT_PROXY_OPTIONS_INIT}
+GIT_REMOTE_CONNECT_OPTIONS_INIT :: git_remote_connect_options{version = GIT_REMOTE_CONNECT_OPTIONS_VERSION, callbacks = {version = GIT_REMOTE_CALLBACKS_VERSION}, proxy_opts = {version = GIT_PROXY_OPTIONS_VERSION}}
 
 @(default_calling_convention="c", link_prefix="")
 foreign lib {

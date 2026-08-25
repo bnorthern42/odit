@@ -10,6 +10,37 @@ import "core:c"
 
 _ :: c
 
+when ODIN_OS == .Windows {
+	foreign import lib {
+		"git2.lib",
+		"system:ws2_32",
+		"system:crypt32",
+		"system:rpcrt4",
+		"system:ole32",
+		"system:advapi32",
+		"system:shell32",
+		"system:user32",
+	}
+} else when ODIN_OS == .Darwin {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:iconv",
+		"system:Security",
+		"system:CoreFoundation",
+		"system:pthread",
+	}
+} else {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:ssl",
+		"system:crypto",
+		"system:pthread",
+	}
+}
+
+
 
 
 // INCLUDE_git_deprecated_h__ :: 
@@ -26,16 +57,16 @@ _ :: c
 /**@{*/
 
 /** @deprecated use GIT_ATTR_VALUE_UNSPECIFIED */
-GIT_ATTR_UNSPECIFIED_T :: GIT_ATTR_VALUE_UNSPECIFIED
+GIT_ATTR_UNSPECIFIED_T :: git_attr_value_t.UNSPECIFIED
 
 /** @deprecated use GIT_ATTR_VALUE_TRUE */
-GIT_ATTR_TRUE_T :: GIT_ATTR_VALUE_TRUE
+GIT_ATTR_TRUE_T :: git_attr_value_t.TRUE
 
 /** @deprecated use GIT_ATTR_VALUE_FALSE */
-GIT_ATTR_FALSE_T :: GIT_ATTR_VALUE_FALSE
+GIT_ATTR_FALSE_T :: git_attr_value_t.FALSE
 
 /** @deprecated use GIT_ATTR_VALUE_STRING */
-GIT_ATTR_VALUE_T :: GIT_ATTR_VALUE_STRING
+GIT_ATTR_VALUE_T :: git_attr_value_t.STRING
 
 /** @deprecated use git_attr_value_t */
 git_attr_t :: git_attr_value_t
@@ -54,7 +85,7 @@ git_attr_t :: git_attr_value_t
 /**@{*/
 
 /** @deprecated use GIT_BLOB_FILTER_ATTRIBUTES_FROM_HEAD */
-GIT_BLOB_FILTER_ATTTRIBUTES_FROM_HEAD :: GIT_BLOB_FILTER_ATTRIBUTES_FROM_HEAD
+GIT_BLOB_FILTER_ATTTRIBUTES_FROM_HEAD :: git_blob_filter_flag_t.ATTRIBUTES_FROM_HEAD
 
 /**
 * Provide a commit signature during commit creation.
@@ -74,16 +105,16 @@ git_commit_signing_cb :: proc "c" (^git_buf, ^git_buf, cstring, rawptr) -> c.int
 /**@{*/
 
 /** @deprecated use GIT_CONFIGMAP_FALSE */
-GIT_CVAR_FALSE  :: GIT_CONFIGMAP_FALSE
+GIT_CVAR_FALSE  :: git_configmap_t.FALSE
 
 /** @deprecated use GIT_CONFIGMAP_TRUE */
-GIT_CVAR_TRUE   :: GIT_CONFIGMAP_TRUE
+GIT_CVAR_TRUE   :: git_configmap_t.TRUE
 
 /** @deprecated use GIT_CONFIGMAP_INT32 */
-GIT_CVAR_INT32  :: GIT_CONFIGMAP_INT32
+GIT_CVAR_INT32  :: git_configmap_t.INT32
 
 /** @deprecated use GIT_CONFIGMAP_STRING */
-GIT_CVAR_STRING :: GIT_CONFIGMAP_STRING
+GIT_CVAR_STRING :: git_configmap_t.STRING
 
 /** @deprecated use git_cvar_map */
 git_cvar_map :: git_configmap
@@ -104,13 +135,22 @@ git_diff_format_email_flags_t :: enum c.uint {
 *
 * @deprecated use `git_email_create_options`
 */
-git_diff_format_email_options :: struct {}
+git_diff_format_email_options :: struct {
+	version:        c.uint,
+	flags:          u32,
+	patch_no:       c.size_t,
+	total_patches:  c.size_t,
+	id:             ^git_oid,
+	summary:        cstring,
+	body:           cstring,
+	author:         ^git_signature,
+}
 
 /** @deprecated use `git_email_create_options` */
 GIT_DIFF_FORMAT_EMAIL_OPTIONS_VERSION :: 1
 
 /** @deprecated use `git_email_create_options` */
-GIT_DIFF_FORMAT_EMAIL_OPTIONS_INIT :: {GIT_DIFF_FORMAT_EMAIL_OPTIONS_VERSION, 0, 1, 1, NULL, NULL, NULL, NULL}
+GIT_DIFF_FORMAT_EMAIL_OPTIONS_INIT :: git_diff_format_email_options{version = GIT_DIFF_FORMAT_EMAIL_OPTIONS_VERSION, patch_no = 1, total_patches = 1}
 
 /**@}*/
 
@@ -126,109 +166,109 @@ GIT_DIFF_FORMAT_EMAIL_OPTIONS_INIT :: {GIT_DIFF_FORMAT_EMAIL_OPTIONS_VERSION, 0,
 /**@{*/
 
 /** @deprecated use `GIT_ERROR_NONE` */
-GITERR_NONE :: GIT_ERROR_NONE
+GITERR_NONE :: git_error_t.NONE
 
 /** @deprecated use `GIT_ERROR_NOMEMORY` */
-GITERR_NOMEMORY :: GIT_ERROR_NOMEMORY
+GITERR_NOMEMORY :: git_error_t.NOMEMORY
 
 /** @deprecated use `GIT_ERROR_OS` */
-GITERR_OS :: GIT_ERROR_OS
+GITERR_OS :: git_error_t.OS
 
 /** @deprecated use `GIT_ERROR_INVALID` */
-GITERR_INVALID :: GIT_ERROR_INVALID
+GITERR_INVALID :: git_error_t.INVALID
 
 /** @deprecated use `GIT_ERROR_REFERENCE` */
-GITERR_REFERENCE :: GIT_ERROR_REFERENCE
+GITERR_REFERENCE :: git_error_t.REFERENCE
 
 /** @deprecated use `GIT_ERROR_ZLIB` */
-GITERR_ZLIB :: GIT_ERROR_ZLIB
+GITERR_ZLIB :: git_error_t.ZLIB
 
 /** @deprecated use `GIT_ERROR_REPOSITORY` */
-GITERR_REPOSITORY :: GIT_ERROR_REPOSITORY
+GITERR_REPOSITORY :: git_error_t.REPOSITORY
 
 /** @deprecated use `GIT_ERROR_CONFIG` */
-GITERR_CONFIG :: GIT_ERROR_CONFIG
+GITERR_CONFIG :: git_error_t.CONFIG
 
 /** @deprecated use `GIT_ERROR_REGEX` */
-GITERR_REGEX :: GIT_ERROR_REGEX
+GITERR_REGEX :: git_error_t.REGEX
 
 /** @deprecated use `GIT_ERROR_ODB` */
-GITERR_ODB :: GIT_ERROR_ODB
+GITERR_ODB :: git_error_t.ODB
 
 /** @deprecated use `GIT_ERROR_INDEX` */
-GITERR_INDEX :: GIT_ERROR_INDEX
+GITERR_INDEX :: git_error_t.INDEX
 
 /** @deprecated use `GIT_ERROR_OBJECT` */
-GITERR_OBJECT :: GIT_ERROR_OBJECT
+GITERR_OBJECT :: git_error_t.OBJECT
 
 /** @deprecated use `GIT_ERROR_NET` */
-GITERR_NET :: GIT_ERROR_NET
+GITERR_NET :: git_error_t.NET
 
 /** @deprecated use `GIT_ERROR_TAG` */
-GITERR_TAG :: GIT_ERROR_TAG
+GITERR_TAG :: git_error_t.TAG
 
 /** @deprecated use `GIT_ERROR_TREE` */
-GITERR_TREE :: GIT_ERROR_TREE
+GITERR_TREE :: git_error_t.TREE
 
 /** @deprecated use `GIT_ERROR_INDEXER` */
-GITERR_INDEXER :: GIT_ERROR_INDEXER
+GITERR_INDEXER :: git_error_t.INDEXER
 
 /** @deprecated use `GIT_ERROR_SSL` */
-GITERR_SSL :: GIT_ERROR_SSL
+GITERR_SSL :: git_error_t.SSL
 
 /** @deprecated use `GIT_ERROR_SUBMODULE` */
-GITERR_SUBMODULE :: GIT_ERROR_SUBMODULE
+GITERR_SUBMODULE :: git_error_t.SUBMODULE
 
 /** @deprecated use `GIT_ERROR_THREAD` */
-GITERR_THREAD :: GIT_ERROR_THREAD
+GITERR_THREAD :: git_error_t.THREAD
 
 /** @deprecated use `GIT_ERROR_STASH` */
-GITERR_STASH :: GIT_ERROR_STASH
+GITERR_STASH :: git_error_t.STASH
 
 /** @deprecated use `GIT_ERROR_CHECKOUT` */
-GITERR_CHECKOUT :: GIT_ERROR_CHECKOUT
+GITERR_CHECKOUT :: git_error_t.CHECKOUT
 
 /** @deprecated use `GIT_ERROR_FETCHHEAD` */
-GITERR_FETCHHEAD :: GIT_ERROR_FETCHHEAD
+GITERR_FETCHHEAD :: git_error_t.FETCHHEAD
 
 /** @deprecated use `GIT_ERROR_MERGE` */
-GITERR_MERGE :: GIT_ERROR_MERGE
+GITERR_MERGE :: git_error_t.MERGE
 
 /** @deprecated use `GIT_ERROR_SSH` */
-GITERR_SSH :: GIT_ERROR_SSH
+GITERR_SSH :: git_error_t.SSH
 
 /** @deprecated use `GIT_ERROR_FILTER` */
-GITERR_FILTER :: GIT_ERROR_FILTER
+GITERR_FILTER :: git_error_t.FILTER
 
 /** @deprecated use `GIT_ERROR_REVERT` */
-GITERR_REVERT :: GIT_ERROR_REVERT
+GITERR_REVERT :: git_error_t.REVERT
 
 /** @deprecated use `GIT_ERROR_CALLBACK` */
-GITERR_CALLBACK :: GIT_ERROR_CALLBACK
+GITERR_CALLBACK :: git_error_t.CALLBACK
 
 /** @deprecated use `GIT_ERROR_CHERRYPICK` */
-GITERR_CHERRYPICK :: GIT_ERROR_CHERRYPICK
+GITERR_CHERRYPICK :: git_error_t.CHERRYPICK
 
 /** @deprecated use `GIT_ERROR_DESCRIBE` */
-GITERR_DESCRIBE :: GIT_ERROR_DESCRIBE
+GITERR_DESCRIBE :: git_error_t.DESCRIBE
 
 /** @deprecated use `GIT_ERROR_REBASE` */
-GITERR_REBASE :: GIT_ERROR_REBASE
+GITERR_REBASE :: git_error_t.REBASE
 
 /** @deprecated use `GIT_ERROR_FILESYSTEM` */
-GITERR_FILESYSTEM :: GIT_ERROR_FILESYSTEM
+GITERR_FILESYSTEM :: git_error_t.FILESYSTEM
 
 /** @deprecated use `GIT_ERROR_PATCH` */
-GITERR_PATCH :: GIT_ERROR_PATCH
+GITERR_PATCH :: git_error_t.PATCH
 
 /** @deprecated use `GIT_ERROR_WORKTREE` */
-GITERR_WORKTREE :: GIT_ERROR_WORKTREE
+GITERR_WORKTREE :: git_error_t.WORKTREE
 
 /** @deprecated use `GIT_ERROR_SHA1` */
-GITERR_SHA1 :: GIT_ERROR_SHA1
+GITERR_SHA1 :: git_error_t.SHA
 
 /** @deprecated use `GIT_ERROR_SHA` */
-GIT_ERROR_SHA1 :: GIT_ERROR_SHA
+GIT_ERROR_SHA1 :: git_error_t.SHA
 
 /**@}*/
 
@@ -255,20 +295,20 @@ GIT_IDXENTRY_STAGESHIFT        :: GIT_INDEX_ENTRY_STAGESHIFT
 
 /* The git_indxentry_flag_t enum */
 /** @deprecated use `GIT_INDEX_ENTRY_EXTENDED` */
-GIT_IDXENTRY_EXTENDED          :: GIT_INDEX_ENTRY_EXTENDED
+GIT_IDXENTRY_EXTENDED          :: git_index_entry_flag_t.EXTENDED
 
 /** @deprecated use `GIT_INDEX_ENTRY_VALID` */
-GIT_IDXENTRY_VALID             :: GIT_INDEX_ENTRY_VALID
+GIT_IDXENTRY_VALID             :: git_index_entry_flag_t.VALID
 
 /* The git_idxentry_extended_flag_t enum */
 /** @deprecated use `GIT_INDEX_ENTRY_INTENT_TO_ADD` */
-GIT_IDXENTRY_INTENT_TO_ADD     :: GIT_INDEX_ENTRY_INTENT_TO_ADD
+GIT_IDXENTRY_INTENT_TO_ADD     :: git_index_entry_extended_flag_t.INTENT_TO_ADD
 
 /** @deprecated use `GIT_INDEX_ENTRY_SKIP_WORKTREE` */
-GIT_IDXENTRY_SKIP_WORKTREE     :: GIT_INDEX_ENTRY_SKIP_WORKTREE
+GIT_IDXENTRY_SKIP_WORKTREE     :: git_index_entry_extended_flag_t.SKIP_WORKTREE
 
 /** @deprecated use `GIT_INDEX_ENTRY_INTENT_TO_ADD | GIT_INDEX_ENTRY_SKIP_WORKTREE` */
-GIT_IDXENTRY_EXTENDED_FLAGS    :: (GIT_INDEX_ENTRY_INTENT_TO_ADD|GIT_INDEX_ENTRY_SKIP_WORKTREE)
+GIT_IDXENTRY_EXTENDED_FLAGS    :: git_index_entry_extended_flag_t.EXTENDED_FLAGS
 
 /** @deprecated this value is not public */
 GIT_IDXENTRY_EXTENDED2         :: (1<<15)
@@ -305,16 +345,16 @@ GIT_IDXENTRY_NEW_SKIP_WORKTREE :: (1<<9)
 
 /* The git_index_capability_t enum */
 /** @deprecated use `GIT_INDEX_CAPABILITY_IGNORE_CASE` */
-GIT_INDEXCAP_IGNORE_CASE       :: GIT_INDEX_CAPABILITY_IGNORE_CASE
+GIT_INDEXCAP_IGNORE_CASE       :: git_index_capability_t.IGNORE_CASE
 
 /** @deprecated use `GIT_INDEX_CAPABILITY_NO_FILEMODE` */
-GIT_INDEXCAP_NO_FILEMODE       :: GIT_INDEX_CAPABILITY_NO_FILEMODE
+GIT_INDEXCAP_NO_FILEMODE       :: git_index_capability_t.NO_FILEMODE
 
 /** @deprecated use `GIT_INDEX_CAPABILITY_NO_SYMLINKS` */
-GIT_INDEXCAP_NO_SYMLINKS       :: GIT_INDEX_CAPABILITY_NO_SYMLINKS
+GIT_INDEXCAP_NO_SYMLINKS       :: git_index_capability_t.NO_SYMLINKS
 
 /** @deprecated use `GIT_INDEX_CAPABILITY_FROM_OWNER` */
-GIT_INDEXCAP_FROM_OWNER        :: GIT_INDEX_CAPABILITY_FROM_OWNER
+GIT_INDEXCAP_FROM_OWNER        :: git_index_capability_t.FROM_OWNER
 
 /**@}*/
 
@@ -332,34 +372,34 @@ GIT_INDEXCAP_FROM_OWNER        :: GIT_INDEX_CAPABILITY_FROM_OWNER
 git_otype :: git_object_t
 
 /** @deprecate use `GIT_OBJECT_ANY` */
-GIT_OBJ_ANY :: GIT_OBJECT_ANY
+GIT_OBJ_ANY :: git_object_t.ANY
 
 /** @deprecate use `GIT_OBJECT_INVALID` */
-GIT_OBJ_BAD :: GIT_OBJECT_INVALID
+GIT_OBJ_BAD :: git_object_t.INVALID
 
 /** @deprecated this value is not public */
 GIT_OBJ__EXT1 :: 0
 
 /** @deprecate use `GIT_OBJECT_COMMIT` */
-GIT_OBJ_COMMIT :: GIT_OBJECT_COMMIT
+GIT_OBJ_COMMIT :: git_object_t.COMMIT
 
 /** @deprecate use `GIT_OBJECT_TREE` */
-GIT_OBJ_TREE :: GIT_OBJECT_TREE
+GIT_OBJ_TREE :: git_object_t.TREE
 
 /** @deprecate use `GIT_OBJECT_BLOB` */
-GIT_OBJ_BLOB :: GIT_OBJECT_BLOB
+GIT_OBJ_BLOB :: git_object_t.BLOB
 
 /** @deprecate use `GIT_OBJECT_TAG` */
-GIT_OBJ_TAG :: GIT_OBJECT_TAG
+GIT_OBJ_TAG :: git_object_t.TAG
 
 /** @deprecated this value is not public */
 GIT_OBJ__EXT2 :: 5
 
 /** @deprecate use `GIT_OBJECT_OFS_DELTA` */
-GIT_OBJ_OFS_DELTA :: GIT_OBJECT_OFS_DELTA
+GIT_OBJ_OFS_DELTA :: 6
 
 /** @deprecate use `GIT_OBJECT_REF_DELTA` */
-GIT_OBJ_REF_DELTA :: GIT_OBJECT_REF_DELTA
+GIT_OBJ_REF_DELTA :: 7
 
 /**@}*/
 
@@ -382,28 +422,28 @@ git_ref_t :: git_reference_t
 git_reference_normalize_t :: git_reference_format_t
 
 /** @deprecate use `GIT_REFERENCE_INVALID` */
-GIT_REF_INVALID :: GIT_REFERENCE_INVALID
+GIT_REF_INVALID :: git_reference_t.INVALID
 
 /** @deprecate use `GIT_REFERENCE_DIRECT` */
-GIT_REF_OID :: GIT_REFERENCE_DIRECT
+GIT_REF_OID :: git_reference_t.DIRECT
 
 /** @deprecate use `GIT_REFERENCE_SYMBOLIC` */
-GIT_REF_SYMBOLIC :: GIT_REFERENCE_SYMBOLIC
+GIT_REF_SYMBOLIC :: git_reference_t.SYMBOLIC
 
 /** @deprecate use `GIT_REFERENCE_ALL` */
-GIT_REF_LISTALL :: GIT_REFERENCE_ALL
+GIT_REF_LISTALL :: git_reference_t.ALL
 
 /** @deprecate use `GIT_REFERENCE_FORMAT_NORMAL` */
-GIT_REF_FORMAT_NORMAL :: GIT_REFERENCE_FORMAT_NORMAL
+GIT_REF_FORMAT_NORMAL :: git_reference_format_t.NORMAL
 
 /** @deprecate use `GIT_REFERENCE_FORMAT_ALLOW_ONELEVEL` */
-GIT_REF_FORMAT_ALLOW_ONELEVEL :: GIT_REFERENCE_FORMAT_ALLOW_ONELEVEL
+GIT_REF_FORMAT_ALLOW_ONELEVEL :: git_reference_format_t.ALLOW_ONELEVEL
 
 /** @deprecate use `GIT_REFERENCE_FORMAT_REFSPEC_PATTERN` */
-GIT_REF_FORMAT_REFSPEC_PATTERN :: GIT_REFERENCE_FORMAT_REFSPEC_PATTERN
+GIT_REF_FORMAT_REFSPEC_PATTERN :: git_reference_format_t.REFSPEC_PATTERN
 
 /** @deprecate use `GIT_REFERENCE_FORMAT_REFSPEC_SHORTHAND` */
-GIT_REF_FORMAT_REFSPEC_SHORTHAND :: GIT_REFERENCE_FORMAT_REFSPEC_SHORTHAND
+GIT_REF_FORMAT_REFSPEC_SHORTHAND :: git_reference_format_t.REFSPEC_SHORTHAND
 
 /**@}*/
 
@@ -431,13 +471,13 @@ GIT_REPOSITORY_INIT_NO_DOTGIT_DIR :: 0
 git_revparse_mode_t :: git_revspec_t
 
 /** @deprecated use `GIT_REVSPEC_SINGLE` */
-GIT_REVPARSE_SINGLE :: GIT_REVSPEC_SINGLE
+GIT_REVPARSE_SINGLE :: git_revspec_t.SINGLE
 
 /** @deprecated use `GIT_REVSPEC_RANGE` */
-GIT_REVPARSE_RANGE :: GIT_REVSPEC_RANGE
+GIT_REVPARSE_RANGE :: git_revspec_t.RANGE
 
 /** @deprecated use `GIT_REVSPEC_MERGE_BASE` */
-GIT_REVPARSE_MERGE_BASE :: GIT_REVSPEC_MERGE_BASE
+GIT_REVPARSE_MERGE_BASE :: git_revspec_t.MERGE_BASE
 
 /** @name Deprecated Credential Types
 *
@@ -476,25 +516,25 @@ git_cred_ssh_interactive_cb :: git_credential_ssh_interactive_cb
 git_credtype_t :: git_credential_t
 
 /** @deprecated use `GIT_CREDENTIAL_USERPASS_PLAINTEXT` */
-GIT_CREDTYPE_USERPASS_PLAINTEXT :: GIT_CREDENTIAL_USERPASS_PLAINTEXT
+GIT_CREDTYPE_USERPASS_PLAINTEXT :: git_credential_t.USERPASS_PLAINTEXT
 
 /** @deprecated use `GIT_CREDENTIAL_SSH_KEY` */
-GIT_CREDTYPE_SSH_KEY :: GIT_CREDENTIAL_SSH_KEY
+GIT_CREDTYPE_SSH_KEY :: git_credential_t.SSH_KEY
 
 /** @deprecated use `GIT_CREDENTIAL_SSH_CUSTOM` */
-GIT_CREDTYPE_SSH_CUSTOM :: GIT_CREDENTIAL_SSH_CUSTOM
+GIT_CREDTYPE_SSH_CUSTOM :: git_credential_t.SSH_CUSTOM
 
 /** @deprecated use `GIT_CREDENTIAL_DEFAULT` */
-GIT_CREDTYPE_DEFAULT :: GIT_CREDENTIAL_DEFAULT
+GIT_CREDTYPE_DEFAULT :: git_credential_t.DEFAULT
 
 /** @deprecated use `GIT_CREDENTIAL_SSH_INTERACTIVE` */
-GIT_CREDTYPE_SSH_INTERACTIVE :: GIT_CREDENTIAL_SSH_INTERACTIVE
+GIT_CREDTYPE_SSH_INTERACTIVE :: git_credential_t.SSH_INTERACTIVE
 
 /** @deprecated use `GIT_CREDENTIAL_USERNAME` */
-GIT_CREDTYPE_USERNAME :: GIT_CREDENTIAL_USERNAME
+GIT_CREDTYPE_USERNAME :: git_credential_t.USERNAME
 
 /** @deprecated use `GIT_CREDENTIAL_SSH_MEMORY` */
-GIT_CREDTYPE_SSH_MEMORY :: GIT_CREDENTIAL_SSH_MEMORY
+GIT_CREDTYPE_SSH_MEMORY :: git_credential_t.SSH_MEMORY
 
 /* Deprecated Credential Helper Types */
 git_cred_userpass_payload :: git_credential_userpass_payload
@@ -567,7 +607,7 @@ LIBGIT2_VER_MAJOR      :: LIBGIT2_VERSION_MAJOR
 LIBGIT2_VER_MINOR      :: LIBGIT2_VERSION_MINOR
 LIBGIT2_VER_REVISION   :: LIBGIT2_VERSION_REVISION
 LIBGIT2_VER_PATCH      :: LIBGIT2_VERSION_PATCH
-LIBGIT2_VER_PRERELEASE :: LIBGIT2_VERSION_PRERELEASE
+LIBGIT2_VER_PRERELEASE : cstring = LIBGIT2_VERSION_PRERELEASE
 
 @(default_calling_convention="c", link_prefix="")
 foreign lib {

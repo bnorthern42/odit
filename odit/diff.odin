@@ -10,6 +10,37 @@ import "core:c"
 
 _ :: c
 
+when ODIN_OS == .Windows {
+	foreign import lib {
+		"git2.lib",
+		"system:ws2_32",
+		"system:crypt32",
+		"system:rpcrt4",
+		"system:ole32",
+		"system:advapi32",
+		"system:shell32",
+		"system:user32",
+	}
+} else when ODIN_OS == .Darwin {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:iconv",
+		"system:Security",
+		"system:CoreFoundation",
+		"system:pthread",
+	}
+} else {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:ssl",
+		"system:crypto",
+		"system:pthread",
+	}
+}
+
+
 
 
 // INCLUDE_git_diff_h__ :: 
@@ -339,7 +370,22 @@ git_diff_progress_cb :: proc "c" (^git_diff, cstring, cstring, rawptr) -> c.int
 * give the defaults.  The default values are marked below.
 *
 */
-git_diff_options :: struct {}
+git_diff_options :: struct {
+	version:           c.uint,
+	flags:             u32,
+	ignore_submodules: git_submodule_ignore_t,
+	pathspec:          git_strarray,
+	notify_cb:         git_diff_notify_cb,
+	progress_cb:       git_diff_progress_cb,
+	payload:           rawptr,
+	context_lines:     u32,
+	interhunk_lines:   u32,
+	oid_type:          git_oid_t,
+	id_abbrev:         u16,
+	max_size:          git_off_t,
+	old_prefix:        cstring,
+	new_prefix:        cstring,
+}
 
 /** The current version of the diff options structure */
 GIT_DIFF_OPTIONS_VERSION :: 1
@@ -347,7 +393,7 @@ GIT_DIFF_OPTIONS_VERSION :: 1
 /** Stack initializer for diff options.  Alternatively use
  * `git_diff_options_init` programmatic initialization.
  */
-GIT_DIFF_OPTIONS_INIT :: {GIT_DIFF_OPTIONS_VERSION, 0, GIT_SUBMODULE_IGNORE_UNSPECIFIED, {NULL, 0}, NULL, NULL, NULL, 3}
+GIT_DIFF_OPTIONS_INIT :: git_diff_options{version = GIT_DIFF_OPTIONS_VERSION, ignore_submodules = .UNSPECIFIED, context_lines = 3}
 
 /**
 * When iterating over a diff, callback that will be made per file.
@@ -380,7 +426,12 @@ git_diff_binary_t :: enum c.uint {
 }
 
 /** The contents of one of the files in a binary diff. */
-git_diff_binary_file :: struct {}
+git_diff_binary_file :: struct {
+	type:        git_diff_binary_t,
+	data:        cstring,
+	datalen:     c.size_t,
+	inflatedlen: c.size_t,
+}
 
 /**
 * Structure describing the binary contents of a diff.
@@ -391,7 +442,11 @@ git_diff_binary_file :: struct {}
 * a base heuristic for binary detection and you can further tune the
 * behavior with git attributes or diff flags and option settings.
 */
-git_diff_binary :: struct {}
+git_diff_binary :: struct {
+	contains_data: c.uint,
+	old_file:      git_diff_binary_file,
+	new_file:      git_diff_binary_file,
+}
 
 /**
 * When iterating over a diff, callback that will be made for
@@ -413,7 +468,14 @@ git_diff_binary_cb :: proc "c" (^git_diff_delta, ^git_diff_binary, rawptr) -> c.
 * header that described where it starts and ends in both the old and new
 * versions in the delta.
 */
-git_diff_hunk :: struct {}
+git_diff_hunk :: struct {
+	old_start:  c.int,
+	old_lines:  c.int,
+	new_start:  c.int,
+	new_lines:  c.int,
+	header_len: c.size_t,
+	header:     [GIT_DIFF_HUNK_HEADER_SIZE]c.char,
+}
 
 /**
 * When iterating over a diff, callback that will be made per hunk.
@@ -470,7 +532,15 @@ git_diff_line_t :: enum c.uint {
 * Line data will not be NUL-byte terminated, however, because it will be
 * just a span of bytes inside the larger file.
 */
-git_diff_line :: struct {}
+git_diff_line :: struct {
+	origin:         c.char,
+	old_lineno:     c.int,
+	new_lineno:     c.int,
+	num_lines:      c.int,
+	content_len:    c.size_t,
+	content_offset: git_off_t,
+	content:        cstring,
+}
 
 /**
 * When iterating over a diff, callback that will be made per text diff
@@ -582,13 +652,22 @@ git_diff_similarity_metric :: struct {
 *
 * These options mostly mimic parameters that can be passed to git-diff.
 */
-git_diff_find_options :: struct {}
+git_diff_find_options :: struct {
+	version:                       c.uint,
+	flags:                         u32,
+	rename_threshold:              u16,
+	rename_from_rewrite_threshold: u16,
+	copy_threshold:                u16,
+	break_rewrite_threshold:       u16,
+	rename_limit:                  c.size_t,
+	metric:                        ^git_diff_similarity_metric,
+}
 
 /** Current version for the `git_diff_find_options` structure */
 GIT_DIFF_FIND_OPTIONS_VERSION :: 1
 
 /** Static constructor for `git_diff_find_options` */
-GIT_DIFF_FIND_OPTIONS_INIT :: {GIT_DIFF_FIND_OPTIONS_VERSION}
+GIT_DIFF_FIND_OPTIONS_INIT :: git_diff_find_options{version = GIT_DIFF_FIND_OPTIONS_VERSION}
 
 /**
 * Possible output formats for diff data
@@ -618,7 +697,7 @@ GIT_DIFF_PARSE_OPTIONS_VERSION :: 1
 /** Stack initializer for diff parse options.  Alternatively use
  * `git_diff_parse_options_init` programmatic initialization.
  */
-GIT_DIFF_PARSE_OPTIONS_INIT :: {GIT_DIFF_PARSE_OPTIONS_VERSION}
+GIT_DIFF_PARSE_OPTIONS_INIT :: git_diff_parse_options{version = GIT_DIFF_PARSE_OPTIONS_VERSION}
 
 /**
 * Formatting options for diff stats
@@ -655,7 +734,7 @@ git_diff_patchid_options :: struct {
 GIT_DIFF_PATCHID_OPTIONS_VERSION :: 1
 
 /** Static constructor for `git_diff_patchid_options` */
-GIT_DIFF_PATCHID_OPTIONS_INIT :: {GIT_DIFF_PATCHID_OPTIONS_VERSION}
+GIT_DIFF_PATCHID_OPTIONS_INIT :: git_diff_patchid_options{version = GIT_DIFF_PATCHID_OPTIONS_VERSION}
 
 @(default_calling_convention="c", link_prefix="")
 foreign lib {

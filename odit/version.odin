@@ -36,7 +36,7 @@ LIBGIT2_VERSION_PATCH      :: 0
  * a prerelease name like "beta" or "rc1".  For final releases, this will
  * be `NULL`.
  */
-LIBGIT2_VERSION_PRERELEASE :: NULL
+LIBGIT2_VERSION_PRERELEASE : cstring = nil
 
 /**
  * The library ABI soversion for this version of libgit2. This should

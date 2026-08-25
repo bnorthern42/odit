@@ -10,6 +10,37 @@ import "core:c"
 
 _ :: c
 
+when ODIN_OS == .Windows {
+	foreign import lib {
+		"git2.lib",
+		"system:ws2_32",
+		"system:crypt32",
+		"system:rpcrt4",
+		"system:ole32",
+		"system:advapi32",
+		"system:shell32",
+		"system:user32",
+	}
+} else when ODIN_OS == .Darwin {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:iconv",
+		"system:Security",
+		"system:CoreFoundation",
+		"system:pthread",
+	}
+} else {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:ssl",
+		"system:crypto",
+		"system:pthread",
+	}
+}
+
+
 
 
 // INCLUDE_git_rebase_h__ :: 
@@ -19,7 +50,17 @@ _ :: c
 *
 * Use to tell the rebase machinery how to operate.
 */
-git_rebase_options :: struct {}
+git_rebase_options :: struct {
+	version:            c.uint,
+	quiet:              c.int,
+	inmemory:           c.int,
+	rewrite_notes_ref:  cstring,
+	merge_options:      git_merge_options,
+	checkout_options:   git_checkout_options,
+	commit_create_cb:   git_commit_create_cb,
+	signing_cb:         proc "c" (^git_buf, ^git_buf, cstring, rawptr) -> c.int,
+	payload:            rawptr,
+}
 
 /**
 * Type of rebase operation in-progress after calling `git_rebase_next`.
@@ -66,10 +107,10 @@ git_rebase_operation_t :: enum c.uint {
 GIT_REBASE_OPTIONS_VERSION :: 1
 
 /** Static constructor for `git_rebase_options` */
-GIT_REBASE_OPTIONS_INIT :: {GIT_REBASE_OPTIONS_VERSION, 0, 0, NULL, GIT_MERGE_OPTIONS_INIT, GIT_CHECKOUT_OPTIONS_INIT, NULL, NULL}
+GIT_REBASE_OPTIONS_INIT :: git_rebase_options{version = GIT_REBASE_OPTIONS_VERSION, merge_options = {version = GIT_MERGE_OPTIONS_VERSION, flags = u32(git_merge_flag_t.FIND_RENAMES)}, checkout_options = {version = GIT_CHECKOUT_OPTIONS_VERSION, dir_mode = 0o755, file_mode = 0o644}}
 
 /** Indicates that a rebase operation is not (yet) in progress. */
-GIT_REBASE_NO_OPERATION :: SIZE_MAX
+GIT_REBASE_NO_OPERATION :: max(c.size_t)
 
 /**
 * A rebase operation

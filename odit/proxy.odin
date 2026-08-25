@@ -10,6 +10,37 @@ import "core:c"
 
 _ :: c
 
+when ODIN_OS == .Windows {
+	foreign import lib {
+		"git2.lib",
+		"system:ws2_32",
+		"system:crypt32",
+		"system:rpcrt4",
+		"system:ole32",
+		"system:advapi32",
+		"system:shell32",
+		"system:user32",
+	}
+} else when ODIN_OS == .Darwin {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:iconv",
+		"system:Security",
+		"system:CoreFoundation",
+		"system:pthread",
+	}
+} else {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:ssl",
+		"system:crypto",
+		"system:pthread",
+	}
+}
+
+
 
 
 // INCLUDE_git_proxy_h__ :: 
@@ -84,7 +115,7 @@ git_proxy_options :: struct {
 GIT_PROXY_OPTIONS_VERSION :: 1
 
 /** Static constructor for `git_proxy_options` */
-GIT_PROXY_OPTIONS_INIT :: {GIT_PROXY_OPTIONS_VERSION}
+GIT_PROXY_OPTIONS_INIT :: git_proxy_options{version = GIT_PROXY_OPTIONS_VERSION}
 
 @(default_calling_convention="c", link_prefix="")
 foreign lib {

@@ -10,6 +10,37 @@ import "core:c"
 
 _ :: c
 
+when ODIN_OS == .Windows {
+	foreign import lib {
+		"git2.lib",
+		"system:ws2_32",
+		"system:crypt32",
+		"system:rpcrt4",
+		"system:ole32",
+		"system:advapi32",
+		"system:shell32",
+		"system:user32",
+	}
+} else when ODIN_OS == .Darwin {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:iconv",
+		"system:Security",
+		"system:CoreFoundation",
+		"system:pthread",
+	}
+} else {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:ssl",
+		"system:crypto",
+		"system:pthread",
+	}
+}
+
+
 
 
 // INCLUDE_git_commit_h__ :: 
@@ -40,7 +71,7 @@ git_commit_create_options :: struct {
 GIT_COMMIT_CREATE_OPTIONS_VERSION :: 1
 
 /** Static constructor for `git_commit_create_options` */
-GIT_COMMIT_CREATE_OPTIONS_INIT :: {GIT_COMMIT_CREATE_OPTIONS_VERSION}
+GIT_COMMIT_CREATE_OPTIONS_INIT :: git_commit_create_options{version = GIT_COMMIT_CREATE_OPTIONS_VERSION}
 
 /**
 * Commit creation callback: used when a function is going to create
@@ -400,7 +431,7 @@ foreign lib {
 	*	The created commit will be written to the Object Database and
 	*	the given reference will be updated to point to it
 	*/
-	git_commit_create :: proc(id: ^git_oid, repo: ^git_repository, update_ref: cstring, author: ^git_signature, committer: ^git_signature, message_encoding: cstring, message: cstring, tree: ^git_tree, parent_count: c.int, parents: []^git_commit) -> c.int ---
+	git_commit_create :: proc(id: ^git_oid, repo: ^git_repository, update_ref: cstring, author: ^git_signature, committer: ^git_signature, message_encoding: cstring, message: cstring, tree: ^git_tree, parent_count: c.size_t, parents: [^]^git_commit) -> c.int ---
 
 	/**
 	* Create new commit in the repository using a variable argument list.
@@ -447,7 +478,7 @@ foreign lib {
 	*	The created commit will be written to the Object Database and
 	*	the given reference will be updated to point to it
 	*/
-	git_commit_create_v :: proc(id: ^git_oid, repo: ^git_repository, update_ref: cstring, author: ^git_signature, committer: ^git_signature, message_encoding: cstring, message: cstring, tree: ^git_tree, parent_count: c.int, #c_vararg _: ..any) -> c.int ---
+	git_commit_create_v :: proc(id: ^git_oid, repo: ^git_repository, update_ref: cstring, author: ^git_signature, committer: ^git_signature, message_encoding: cstring, message: cstring, tree: ^git_tree, parent_count: c.size_t, #c_vararg varargs: ..any) -> c.int ---
 
 	/**
 	* Commits the staged changes in the repository; this is a near analog to

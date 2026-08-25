@@ -10,6 +10,37 @@ import "core:c"
 
 _ :: c
 
+when ODIN_OS == .Windows {
+	foreign import lib {
+		"git2.lib",
+		"system:ws2_32",
+		"system:crypt32",
+		"system:rpcrt4",
+		"system:ole32",
+		"system:advapi32",
+		"system:shell32",
+		"system:user32",
+	}
+} else when ODIN_OS == .Darwin {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:iconv",
+		"system:Security",
+		"system:CoreFoundation",
+		"system:pthread",
+	}
+} else {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:ssl",
+		"system:crypto",
+		"system:pthread",
+	}
+}
+
+
 
 
 // INCLUDE_git_checkout_h__ :: 
@@ -247,7 +278,11 @@ git_checkout_notify_t :: enum c.uint {
 }
 
 /** Checkout performance-reporting structure */
-git_checkout_perfdata :: struct {}
+git_checkout_perfdata :: struct {
+	mkdir_calls: c.size_t,
+	stat_calls:  c.size_t,
+	chmod_calls: c.size_t,
+}
 
 /**
 * Checkout notification callback function.
@@ -361,7 +396,7 @@ git_checkout_options :: struct {
 GIT_CHECKOUT_OPTIONS_VERSION :: 1
 
 /** Static constructor for `git_checkout_options` */
-GIT_CHECKOUT_OPTIONS_INIT :: {GIT_CHECKOUT_OPTIONS_VERSION}
+GIT_CHECKOUT_OPTIONS_INIT :: git_checkout_options{version = GIT_CHECKOUT_OPTIONS_VERSION, dir_mode = 0o755, file_mode = 0o644}
 
 @(default_calling_convention="c", link_prefix="")
 foreign lib {

@@ -6,6 +6,10 @@
 */
 package odit
 
+import "core:c"
+
+_ :: c
+
 
 
 

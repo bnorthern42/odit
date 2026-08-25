@@ -10,6 +10,37 @@ import "core:c"
 
 _ :: c
 
+when ODIN_OS == .Windows {
+	foreign import lib {
+		"git2.lib",
+		"system:ws2_32",
+		"system:crypt32",
+		"system:rpcrt4",
+		"system:ole32",
+		"system:advapi32",
+		"system:shell32",
+		"system:user32",
+	}
+} else when ODIN_OS == .Darwin {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:iconv",
+		"system:Security",
+		"system:CoreFoundation",
+		"system:pthread",
+	}
+} else {
+	foreign import lib {
+		"../libs/build/libgit2.a",
+		"system:z",
+		"system:ssl",
+		"system:crypto",
+		"system:pthread",
+	}
+}
+
+
 
 
 // INCLUDE_git_message_h__ :: 
@@ -28,7 +59,11 @@ git_message_trailer :: struct {
 * Struct members under the private comment are private, subject to change
 * and should not be used by callers.
 */
-git_message_trailer_array :: struct {}
+git_message_trailer_array :: struct {
+	trailers:       [^]git_message_trailer,
+	count:          c.size_t,
+	_trailer_block: [^]c.char,
+}
 
 @(default_calling_convention="c", link_prefix="")
 foreign lib {
