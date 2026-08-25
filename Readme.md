@@ -40,7 +40,7 @@ odit/
 │   └── ...              # All remaining libgit2 modules (68 files)
 ├── libs/                # Vendored libgit2 source & build targets
 ├── main.odin            # Full interactive showcase and CLI demo
-├── TestingDev/          # Automated test suite (test_odit.odin)
+├── tests/               # Comprehensive automated test suite & run_tests.sh
 └── TestingSandbox/      # Minimal sandbox example with build.sh
 ```
 
@@ -71,10 +71,12 @@ This generates `libs/build/libgit2.a` (or `git2.lib` on Windows), which `odit` l
 
 ### 3. Running the Test Suite
 
-Run the full automated test suite:
+Run the test suite using the included shell script or Odin CLI:
 
 ```bash
-odin test TestingDev -all-packages
+./tests/run_tests.sh
+# or directly:
+odin test tests -all-packages
 ```
 
 ### 4. Running the Showcase Demo

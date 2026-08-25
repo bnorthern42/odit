@@ -7,5 +7,5 @@ sandbox_test
 sandbox_demo
 odit_demo
 TestingSandbox/sandbox_demo
-TestingDev/TestingDev.bin
-TestingDev/test_odit.bin
+tests/tests.bin
+tests/test_odit.bin

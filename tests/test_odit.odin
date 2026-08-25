@@ -1,4 +1,4 @@
-package test_odit
+package tests
 
 import "core:c"
 import "core:fmt"

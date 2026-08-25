@@ -30,10 +30,12 @@ cd ..
 ```
 
 ### 2. Run the Automated Test Suite
-Run all unit tests using Odin's test runner:
+Run all unit tests using the test script or Odin's test runner:
 
 ```bash
-odin test TestingDev -all-packages
+./tests/run_tests.sh
+# or directly:
+odin test tests -all-packages
 ```
 
 ### 3. Run the CLI Showcase Demo
@@ -63,7 +65,7 @@ odin run main.odin -file
 
 1. Fork the repository and create a feature branch (`git checkout -b feature/my-feature`).
 2. Make your changes with clear, descriptive commit messages.
-3. Ensure all tests pass (`odin test TestingDev -all-packages`).
+3. Ensure all tests pass (`./tests/run_tests.sh`).
 4. Submit a Pull Request targeting the `master` branch using the provided PR template.
 
 ---
