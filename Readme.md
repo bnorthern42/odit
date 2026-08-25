@@ -40,8 +40,14 @@ odit/
 │   └── ...              # All remaining libgit2 modules (68 files)
 ├── libs/                # Vendored libgit2 source & build targets
 ├── main.odin            # Full interactive showcase and CLI demo
-├── tests/               # Comprehensive automated test suite & run_tests.sh
-└── TestingSandbox/      # Minimal sandbox example with build.sh
+├── examples/            # Standalone runnable example projects
+│   ├── minimal/         # Minimal version and initialization check
+│   ├── 01_init_repo/    # Repo creation, staging, and initial commit
+│   ├── 02_log_revwalk/  # Commit history graph traversal and log display
+│   ├── 03_status_diff/  # Status querying and diff statistics
+│   ├── 04_branches_tags/# Branch iteration and annotated release tags
+│   └── 05_config_inspect# Typed Git configuration get/set
+└── tests/               # Comprehensive automated test suite (15 unit tests)
 ```
 
 ---
@@ -79,12 +85,18 @@ Run the test suite using the included shell script or Odin CLI:
 odin test tests -all-packages
 ```
 
-### 4. Running the Showcase Demo
+### 4. Running the Showcase Demo & Examples
 
-Execute the live demonstration program:
+Execute the main demonstration application:
 
 ```bash
 odin run main.odin -file
+```
+
+Or run any of the standalone examples in `examples/`:
+
+```bash
+cd examples/01_init_repo && odin run main.odin -file
 ```
 
 ---

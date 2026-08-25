@@ -2,7 +2,7 @@ package main
 
 import "core:c"
 import "core:fmt"
-import "../odit"
+import "../../odit"
 
 main :: proc() {
 	count := odit.git_libgit2_init()

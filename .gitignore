@@ -6,6 +6,8 @@ libs/build/
 sandbox_test
 sandbox_demo
 odit_demo
-TestingSandbox/sandbox_demo
+minimal_demo
+examples/**/minimal_demo
+examples/**/sandbox_demo
 tests/tests.bin
 tests/test_odit.bin
