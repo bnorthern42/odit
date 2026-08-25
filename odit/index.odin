@@ -214,20 +214,24 @@ GIT_INDEX_OPTIONS_VERSION :: 1
 /** Static constructor for `git_index_options` */
 GIT_INDEX_OPTIONS_INIT :: git_index_options{version = GIT_INDEX_OPTIONS_VERSION}
 
+/**
+* Initialize git_index_options structure
+*
+* Initializes a `git_index_options` with default values. Equivalent to creating
+* an instance with GIT_INDEX_OPTIONS_INIT.
+*
+* @param opts The `git_index_options` struct to initialize.
+* @param version The struct version; pass `GIT_INDEX_OPTIONS_VERSION`.
+* @return Zero on success; -1 on failure.
+*/
+git_index_options_init :: proc(opts: ^git_index_options, version: c.uint) -> c.int {
+	if opts == nil do return -1
+	opts^ = git_index_options{version = version}
+	return 0
+}
+
 @(default_calling_convention="c", link_prefix="")
 foreign lib {
-	/**
-	* Initialize git_index_options structure
-	*
-	* Initializes a `git_index_options` with default values. Equivalent to creating
-	* an instance with GIT_INDEX_OPTIONS_INIT.
-	*
-	* @param opts The `git_index_options` struct to initialize.
-	* @param version The struct version; pass `GIT_INDEX_OPTIONS_VERSION`.
-	* @return Zero on success; -1 on failure.
-	*/
-	git_index_options_init :: proc(opts: ^git_index_options, version: c.uint) -> c.int ---
-
 	/**
 	* Create a new bare Git index object as a memory representation
 	* of the Git index file in 'index_path', without a repository

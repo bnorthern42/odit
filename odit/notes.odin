@@ -74,7 +74,7 @@ foreign lib {
 	*
 	* @return 0 or an error code
 	*/
-	git_note_iterator_new :: proc(out: ^^git_note_iterator, repo: ^c.int, notes_ref: cstring) -> c.int ---
+	git_note_iterator_new :: proc(out: ^^git_note_iterator, repo: ^git_repository, notes_ref: cstring) -> c.int ---
 
 	/**
 	* Creates a new iterator for notes from a commit
@@ -86,7 +86,7 @@ foreign lib {
 	*
 	* @return 0 or an error code
 	*/
-	git_note_commit_iterator_new :: proc(out: ^^git_note_iterator, notes_commit: ^c.int) -> c.int ---
+	git_note_commit_iterator_new :: proc(out: ^^git_note_iterator, notes_commit: ^git_commit) -> c.int ---
 
 	/**
 	* Frees an git_note_iterator
@@ -121,7 +121,7 @@ foreign lib {
 	*
 	* @return 0 or an error code
 	*/
-	git_note_read :: proc(out: ^^c.int, repo: ^c.int, notes_ref: cstring, oid: ^git_oid) -> c.int ---
+	git_note_read :: proc(out: ^^git_note, repo: ^git_repository, notes_ref: cstring, oid: ^git_oid) -> c.int ---
 
 	/**
 	* Read the note for an object from a note commit
@@ -135,7 +135,7 @@ foreign lib {
 	*
 	* @return 0 or an error code
 	*/
-	git_note_commit_read :: proc(out: ^^c.int, repo: ^c.int, notes_commit: ^c.int, oid: ^git_oid) -> c.int ---
+	git_note_commit_read :: proc(out: ^^git_note, repo: ^git_repository, notes_commit: ^git_commit, oid: ^git_oid) -> c.int ---
 
 	/**
 	* Get the note author
@@ -143,7 +143,7 @@ foreign lib {
 	* @param note the note
 	* @return the author
 	*/
-	git_note_author :: proc(note: ^c.int) -> ^c.int ---
+	git_note_author :: proc(note: ^git_note) -> ^git_signature ---
 
 	/**
 	* Get the note committer
@@ -151,7 +151,7 @@ foreign lib {
 	* @param note the note
 	* @return the committer
 	*/
-	git_note_committer :: proc(note: ^c.int) -> ^c.int ---
+	git_note_committer :: proc(note: ^git_note) -> ^git_signature ---
 
 	/**
 	* Get the note message
@@ -159,7 +159,7 @@ foreign lib {
 	* @param note the note
 	* @return the note message
 	*/
-	git_note_message :: proc(note: ^c.int) -> cstring ---
+	git_note_message :: proc(note: ^git_note) -> cstring ---
 
 	/**
 	* Get the note object's id
@@ -167,7 +167,7 @@ foreign lib {
 	* @param note the note
 	* @return the note object's id
 	*/
-	git_note_id :: proc(note: ^c.int) -> ^git_oid ---
+	git_note_id :: proc(note: ^git_note) -> ^git_oid ---
 
 	/**
 	* Add a note for an object
@@ -184,7 +184,7 @@ foreign lib {
 	*
 	* @return 0 or an error code
 	*/
-	git_note_create :: proc(out: ^git_oid, repo: ^c.int, notes_ref: cstring, author: ^c.int, committer: ^c.int, oid: ^git_oid, note: cstring, force: c.int) -> c.int ---
+	git_note_create :: proc(out: ^git_oid, repo: ^git_repository, notes_ref: cstring, author: ^git_signature, committer: ^git_signature, oid: ^git_oid, note: cstring, force: c.int) -> c.int ---
 
 	/**
 	* Add a note for an object from a commit
@@ -206,7 +206,7 @@ foreign lib {
 	*
 	* @return 0 or an error code
 	*/
-	git_note_commit_create :: proc(notes_commit_out: ^git_oid, notes_blob_out: ^git_oid, repo: ^c.int, parent: ^c.int, author: ^c.int, committer: ^c.int, oid: ^git_oid, note: cstring, allow_note_overwrite: c.int) -> c.int ---
+	git_note_commit_create :: proc(notes_commit_out: ^git_oid, notes_blob_out: ^git_oid, repo: ^git_repository, parent: ^git_commit, author: ^git_signature, committer: ^git_signature, oid: ^git_oid, note: cstring, allow_note_overwrite: c.int) -> c.int ---
 
 	/**
 	* Remove the note for an object
@@ -220,7 +220,7 @@ foreign lib {
 	*
 	* @return 0 or an error code
 	*/
-	git_note_remove :: proc(repo: ^c.int, notes_ref: cstring, author: ^c.int, committer: ^c.int, oid: ^git_oid) -> c.int ---
+	git_note_remove :: proc(repo: ^git_repository, notes_ref: cstring, author: ^git_signature, committer: ^git_signature, oid: ^git_oid) -> c.int ---
 
 	/**
 	* Remove the note for an object
@@ -240,14 +240,14 @@ foreign lib {
 	*
 	* @return 0 or an error code
 	*/
-	git_note_commit_remove :: proc(notes_commit_out: ^git_oid, repo: ^c.int, notes_commit: ^c.int, author: ^c.int, committer: ^c.int, oid: ^git_oid) -> c.int ---
+	git_note_commit_remove :: proc(notes_commit_out: ^git_oid, repo: ^git_repository, notes_commit: ^git_commit, author: ^git_signature, committer: ^git_signature, oid: ^git_oid) -> c.int ---
 
 	/**
 	* Free a git_note object
 	*
 	* @param note git_note object
 	*/
-	git_note_free :: proc(note: ^c.int) ---
+	git_note_free :: proc(note: ^git_note) ---
 
 	/**
 	* Get the default notes reference for a repository
@@ -257,7 +257,7 @@ foreign lib {
 	*
 	* @return 0 or an error code
 	*/
-	git_note_default_ref :: proc(out: ^c.int, repo: ^c.int) -> c.int ---
+	git_note_default_ref :: proc(out: ^git_buf, repo: ^git_repository) -> c.int ---
 
 	/**
 	* Loop over all the notes within a specified namespace
@@ -275,5 +275,5 @@ foreign lib {
 	*
 	* @return 0 on success, non-zero callback return value, or error code
 	*/
-	git_note_foreach :: proc(repo: ^c.int, notes_ref: cstring, note_cb: git_note_foreach_cb, payload: rawptr) -> c.int ---
+	git_note_foreach :: proc(repo: ^git_repository, notes_ref: cstring, note_cb: git_note_foreach_cb, payload: rawptr) -> c.int ---
 }

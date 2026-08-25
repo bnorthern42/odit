@@ -334,21 +334,6 @@ foreign lib {
 	git_blame_file :: proc(out: ^^git_blame, repo: ^c.int, path: cstring, options: ^git_blame_options) -> c.int ---
 
 	/**
-	* Get the blame for a single file in the repository, using the specified
-	* buffer contents as the uncommitted changes of the file (the working
-	* directory contents).
-	*
-	* @param out pointer that will receive the blame object
-	* @param repo repository whose history is to be walked
-	* @param path path to file to consider
-	* @param contents the uncommitted changes
-	* @param contents_len the length of the changes buffer
-	* @param options options for the blame operation or NULL
-	* @return 0 on success, or an error code
-	*/
-	git_blame_file_from_buffer :: proc(out: ^^git_blame, repo: ^c.int, path: cstring, contents: cstring, contents_len: c.int, options: ^git_blame_options) -> c.int ---
-
-	/**
 	* Get blame data for a file that has been modified in memory. The `blame`
 	* parameter is a pre-calculated blame for the in-odb history of the file.
 	* This means that once a file blame is completed (which can be expensive),

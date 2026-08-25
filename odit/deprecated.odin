@@ -908,7 +908,6 @@ foreign lib {
 	git_diff_init_options              :: proc(opts: ^git_diff_options, version: c.uint) -> c.int ---
 	git_diff_find_init_options         :: proc(opts: ^git_diff_find_options, version: c.uint) -> c.int ---
 	git_diff_format_email_init_options :: proc(opts: ^git_diff_format_email_options, version: c.uint) -> c.int ---
-	git_diff_patchid_init_options      :: proc(opts: ^git_diff_patchid_options, version: c.uint) -> c.int ---
 	git_fetch_init_options             :: proc(opts: ^git_fetch_options, version: c.uint) -> c.int ---
 	git_indexer_init_options           :: proc(opts: ^git_indexer_options, version: c.uint) -> c.int ---
 	git_merge_init_options             :: proc(opts: ^git_merge_options, version: c.uint) -> c.int ---
@@ -926,3 +925,6 @@ foreign lib {
 	git_worktree_add_init_options      :: proc(opts: ^git_worktree_add_options, version: c.uint) -> c.int ---
 	git_worktree_prune_init_options    :: proc(opts: ^git_worktree_prune_options, version: c.uint) -> c.int ---
 }
+
+git_diff_patchid_init_options :: git_diff_patchid_options_init
+
